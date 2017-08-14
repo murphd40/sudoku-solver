@@ -1,24 +1,42 @@
 package murphd40.sudoku;
 
-import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.google.common.collect.Sets;
 
+import static java.lang.Character.MAX_RADIX;
+
 public class Cell {
 
-    private Set<String> values;
+    Set<String> values;
 
     private Cell(Set<String> values) {
         this.values = values;
     }
 
-    public static Cell of(int size) {
-        return new Cell(Sets.newHashSet("1", "2", "3", "4", "5", "6", "7", "8", "9"));
+    static Cell of(int size) {
+        return new Cell(IntStream.range(1, size + 1).mapToObj(i -> Integer.toString(i, MAX_RADIX)).collect(Collectors.toSet()));
     }
 
-    public static Cell solved(String value) {
-        return new Cell(Collections.singleton(value));
+    static Cell solved(String value) {
+        return new Cell(Sets.newHashSet(value));
+    }
+
+    boolean isSolved() {
+        return values.size() == 1;
+    }
+
+    void prune(Set<String> toRemove) {
+        values.removeAll(toRemove);
+        checkState();
+    }
+
+    private void checkState() {
+        if (values.size() < 1) {
+            throw new IllegalStateException("Cell has no possible values!");
+        }
     }
 
     @Override
