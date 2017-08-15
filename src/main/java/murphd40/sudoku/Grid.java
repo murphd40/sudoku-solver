@@ -23,7 +23,7 @@ public class Grid {
     }
 
     boolean isSolved() {
-        return Arrays.stream(cells).flatMap(Arrays::stream).allMatch(cell -> cell.values.size() == 1);
+        return Arrays.stream(cells).flatMap(Arrays::stream).allMatch(Cell::isSolved);
     }
 
     @Override
